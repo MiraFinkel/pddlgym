@@ -1,6 +1,6 @@
 """PDDL parsing.
 """
-from pddlgym.structs import (Type, Predicate, Literal, LiteralConjunction,
+from pddlgym.pddlgym.structs import (Type, Predicate, Literal, LiteralConjunction,
                              LiteralDisjunction, Not, Anti, ForAll, Exists,
                              ProbabilisticEffect, TypedEntity, ground_literal,
                              DerivedPredicate, NoChange)
@@ -473,8 +473,11 @@ class PDDLDomainParser(PDDLParser, PDDLDomain):
         actions = set()
         for name, operator in self.operators.items():
             types = [p.var_type for p in operator.params]
+            variables = [p for p in operator.params]
             action = Predicate(name, len(types), types)
             assert name not in self.predicates, "Cannot have predicate with same name as operator"
+            setattr(action, "predicate", action)
+            setattr(action, "variables", variables)
             self.predicates[name] = action
             actions.add(action)
         return actions

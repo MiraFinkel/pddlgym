@@ -15,10 +15,10 @@ Usage example:
 >>> action = env.action_space.sample()
 >>> obs, reward, done, debug_info = env.step(action)
 """
-from pddlgym.parser import PDDLDomainParser, PDDLProblemParser, PDDLParser
-from pddlgym.inference import find_satisfying_assignments, check_goal
-from pddlgym.structs import ground_literal, Literal, State, ProbabilisticEffect, LiteralConjunction, NoChange
-from pddlgym.spaces import LiteralSpace, LiteralSetSpace, LiteralActionSpace
+from pddlgym.pddlgym.parser import PDDLDomainParser, PDDLProblemParser, PDDLParser
+from pddlgym.pddlgym.inference import find_satisfying_assignments, check_goal
+from pddlgym.pddlgym.structs import ground_literal, Literal, State, ProbabilisticEffect, LiteralConjunction, NoChange
+from pddlgym.pddlgym.spaces import LiteralSpace, LiteralSetSpace, LiteralActionSpace
 
 import copy
 import functools
@@ -306,6 +306,7 @@ class PDDLEnv(gym.Env):
                  raise_error_on_invalid_action=False,
                  operators_as_actions=False,
                  dynamic_action_space=False):
+        self.actions = None
         self._state = None
         self._domain_file = domain_file
         self._problem_dir = problem_dir
@@ -443,7 +444,7 @@ class PDDLEnv(gym.Env):
         self._goal = self._problem.goal
         debug_info = self._get_debug_info()
 
-        return self.get_state(), debug_info
+        return self.get_state()
 
     def _get_debug_info(self):
         """
@@ -481,6 +482,7 @@ class PDDLEnv(gym.Env):
         debug_info : dict
             See self._get_debug_info.
         """
+        action = self.actions[action]
         state, reward, done, debug_info = self.sample_transition(action)
         self.set_state(state)
         return state, reward, done, debug_info
@@ -498,7 +500,8 @@ class PDDLEnv(gym.Env):
     def sample_transition(self, action):
         state = self._get_successor_state(self._state, action, self.domain,
                                           inference_mode=self._inference_mode,
-                                          raise_error_on_invalid_action=self._raise_error_on_invalid_action)
+                                          raise_error_on_invalid_action=self._raise_error_on_invalid_action,
+                                          require_unique_assignment=False)
         return self._get_new_state_info(state)
 
     def _get_successor_state(self, *args, **kwargs):

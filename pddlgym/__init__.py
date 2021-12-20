@@ -4,7 +4,7 @@ from . import tests
 
 import matplotlib
 # matplotlib.use("Agg")
-from pddlgym.rendering import *
+from pddlgym.pddlgym.rendering import *
 from gym.envs.registration import register
 import gym
 
@@ -26,7 +26,7 @@ def register_pddl_env(name, is_test_env, other_args):
 
     register(
         id='PDDLEnv{}-v0'.format(gym_name),
-        entry_point='pddlgym.core:PDDLEnv',
+        entry_point='pddlgym.pddlgym.core:PDDLEnv',
         kwargs=dict({'domain_file' : domain_file, 'problem_dir' : problem_dir,
                      **other_args}),
     )

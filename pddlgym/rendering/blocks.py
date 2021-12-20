@@ -136,5 +136,7 @@ def render(obs, mode='human', close=False):
     draw_blocks(ax, block_width, block_height, block_positions)
     draw_robot(ax, robot_width, robot_height, robot_midx, robot_midy, holding,
         block_width, block_height)
+    print(fig)
+    print(fig2data(fig))
 
     return fig2data(fig)

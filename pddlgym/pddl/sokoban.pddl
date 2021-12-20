@@ -17,7 +17,7 @@
 
   
 
-	(:action move
+	(:action move_act
 		:parameters (?p - thing ?from - location ?to - location ?dir - direction)
 		:precondition (and (move ?dir)
 			(is-player ?p)
